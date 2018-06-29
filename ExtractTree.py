@@ -27,22 +27,25 @@ PARSER.add_argument('path',
                     help='Path to recursively extract from')
 ARGS = PARSER.parse_args()
 
-# Loop over every input path
-NUM_EXTRACTED = 0
-for path in ARGS.path:
-    # Check path input
-    if os.path.isdir(path) is not True:
-        print('{} is not a valid directory.'.format(path))
-        continue
+# Loop over every input path within KeyboardInterrupt try/catch
+try:
+    NUM_EXTRACTED = 0
+    for path in ARGS.path:
+        # Check path input
+        if os.path.isdir(path) is not True:
+            print('{} is not a valid directory.'.format(path))
+            continue
 
-    # Loop through all files
-    for root, directories, filenames in os.walk(path):
-        # ipdb.set_trace()
-        for filename in filenames:
-            if filename.endswith(VALID_EXT):
-                print('Extracting ' + os.path.join(root, filename))
-                extract(root, filename)
-                NUM_EXTRACTED += 1
+        # Loop through all files
+        for root, directories, filenames in os.walk(path):
+            # ipdb.set_trace()
+            for filename in filenames:
+                if filename.endswith(VALID_EXT):
+                    print('Extracting ' + os.path.join(root, filename))
+                    extract(root, filename)
+                    NUM_EXTRACTED += 1
+except KeyboardInterrupt:
+    print('Extraction Interrupted by KeyboardInterrupt (Ctrl+C)!')
 
 # Print end time
 TOTAL_TIME = time.time() - START_TIME
